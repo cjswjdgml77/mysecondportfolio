@@ -1,2 +1,2 @@
 # mysecondportfolio
-# hello
+# start the app  : npm run start
