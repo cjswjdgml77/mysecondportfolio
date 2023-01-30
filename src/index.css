@@ -1,0 +1,138 @@
+@import url(//db.onlinewebfonts.com/c/25fb96b64c7477f11cef759f024ec97e?family=MessinaSansWeb+SemiBold);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+    margin:0;
+    padding:0;  
+}
+::-webkit-scrollbar{
+    display:none;
+}
+html{
+    scroll-behavior: smooth;
+}
+body{
+    font-family : "MessinaSansWeb SemiBold";
+    overflow: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+    touch-action: none;
+
+    /* scroll-snap-type: y mandatory; */
+}
+html,body{
+    -webkit-transform:translate3d(0,0,0);
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+}
+
+img{
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+::selection{
+    background : #cdcdcd;
+}
+
+.back-hidden{
+ /*
+ transform: translateZ(0);
+ -webkit-font-smoothing: subpixel-antialiased;
+ will-change: transform; */
+ /* zoom:1000%; */
+ transform: translate3d(0px, 0px, 0px) scale(0.5, 0.5);
+ will-change: transform;
+}
+
+.page-slide-up{
+    transform: translateY(-100%);
+    -webkit-transform:translateY(-100%);
+}
+
+.page-slide-down{
+    z-index: 3;
+    /* /* transform: translateY(0%); */
+    /* animation : slide-up 500ms ease-in-out both ; */
+}
+
+.text-hide{
+    transform: translateY(100%);
+
+    transition: all 0.2s linear;
+    transition-delay : var(--delay);
+}
+
+.text-show{
+    transform: translateY(0%);
+}
+
+@keyframes slide-up {
+    0%{
+        transform:translateY(0%);
+    }
+
+    100%{
+        background: black;
+
+        transform:translateY(-100%);
+    }
+}
+
+.slide-button-on{
+    border-right:var(--right);
+    border-left:var(--left);
+    transform:translateX(var(--gap));
+}
+
+.slide-button-off{
+    transform:translateX(0px);
+    -webkit-transform:translateX(0px);
+}
+
+.transform__y-zero{
+    transform:translateY(0%);
+    -webkit-transform:translateY(0%);
+    transition-delay:var(--delay);
+}
+.slide-button{
+    mix-blend-mode: difference;
+    animation: text-scale 2s linear infinite;
+    -webkit-animation: text-scale 2s linear infinite;
+}
+
+@keyframes text-scale{
+    0%{
+        transform : scale(1);
+        
+    }
+
+    100%{
+        transform: scale(var(--scale));
+    }
+}
+
+@-webkit-keyframes text-scale{
+    0%{
+        -webkit-transform : scale(1);
+    }
+
+    100%{
+        -webkit-transform: scale(var(--scale));
+    }
+}
+.img__sequnce-btn{
+    transform-style:preserve-3d;
+
+}
+
