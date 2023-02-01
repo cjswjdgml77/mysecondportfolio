@@ -1,5 +1,5 @@
 const styles = {
-  topLayout: "flex w-[100%] relative h-[100vh]",
+  topLayout: "flex w-full relative h-[100vh]",
   titleLayout: "w-full flex justify-center relative",
   slideLayout:
     "w-full absolute transition-all ease-in duration-500 translate-y-[0%]",

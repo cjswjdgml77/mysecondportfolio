@@ -1,4 +1,4 @@
 import Header from "./Header";
-import Sydney from "./Sydney";
+import TravelSpot from "./TravelSpot";
 
-export { Header, Sydney };
+export { Header, TravelSpot };

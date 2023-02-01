@@ -5,13 +5,57 @@ import ImageControlBtn from "./ImageControlBtn";
 function TravelImages({ travelImages, title }) {
   const imageBox = useRef(null);
   const fullImage = useRef(null);
+  const mycanvas = useRef(null);
+  const controlBtnPrev = useRef(null);
+  const controlBtnNext = useRef(null);
+
   const [draggable, isDraggable] = useState(null);
   const [start, isStart] = useState(0);
   const [isClicked, setIsClicked] = useState(null);
   const [isMax, setIsMax] = useState(false);
   useEffect(() => {
+    const ctx = mycanvas.current.getContext("2d", { willReadFrequently: true });
     if (isMax) {
       const listsOfImeages = imageBox.current.childNodes;
+      const image = new Image(window.innerWidth, window.innerHeight);
+      image.onload = drawCanvas;
+      image.src = travelImages[isClicked ? isClicked : 0].url;
+
+      function drawCanvas() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        mycanvas.current.width = window.innerWidth;
+        mycanvas.current.height = window.innerHeight;
+
+        ctx.drawImage(this, 0, 0, this.width, this.height);
+
+        const firstBtn = controlBtnPrev.current.getBoundingClientRect();
+        const secondBtn = controlBtnNext.current.getBoundingClientRect();
+
+        const imageData = ctx.getImageData(
+          firstBtn.left,
+          firstBtn.top,
+          firstBtn.width,
+          firstBtn.height
+        );
+        const imageData2 = ctx.getImageData(
+          secondBtn.left,
+          secondBtn.top,
+          secondBtn.width,
+          secondBtn.height
+        );
+        controlBtnPrev.current.style.setProperty(
+          "--font-color",
+          `rgb(${255 - imageData.data[0]},${255 - imageData.data[1]},${
+            255 - imageData.data[2]
+          })`
+        );
+        controlBtnNext.current.style.setProperty(
+          "--font-color",
+          `rgb(${255 - imageData2.data[0]},${255 - imageData2.data[1]},${
+            255 - imageData2.data[2]
+          })`
+        );
+      }
       console.log(window.innerWidth * 15 * 20) / (100 * listsOfImeages.length);
       isClicked ? adjustImages(isClicked) : adjustImages(0);
       fullImage.current.style.setProperty("--move", `-${isClicked * 100}%`);
@@ -26,10 +70,9 @@ function TravelImages({ travelImages, title }) {
       }px) scale(0.2)`;
     } else {
       imageBox.current.style.scale = 1;
-      const listsOfImeages = imageBox.current.childNodes;
       imageBox.current.style.transform = "translateY(0px)";
     }
-  }, [isMax]);
+  }, [isMax, isClicked]);
   const DragStart = (e) => {
     isDraggable(true);
   };
@@ -70,20 +113,23 @@ function TravelImages({ travelImages, title }) {
   };
   const adjustImages = (idx) => {
     const listsOfImeages = imageBox.current.childNodes;
-    listsOfImeages.forEach((img, index) => {
-      if (index === idx) {
-        img.style.transform = `translateX(${start}px) scale(1.5)`;
-      } else {
-        console.log(idx);
-        if (start === 0 || start) {
-          let add = (window.innerWidth * 5) / 100;
-          if (index < idx) {
-            add = add * -1;
+    setIsClicked(() => {
+      listsOfImeages.forEach((img, index) => {
+        if (index === idx) {
+          img.style.transform = `translateX(${start}px) scale(1.5)`;
+        } else {
+          console.log(idx);
+          if (start === 0 || start) {
+            let add = (window.innerWidth * 5) / 100;
+            if (index < idx) {
+              add = add * -1;
+            }
+            img.style.transform = `translateX(${start + add}px)`;
+            img.style.transitionDelay = "0s";
           }
-          img.style.transform = `translateX(${start + add}px)`;
-          img.style.transitionDelay = "0s";
         }
-      }
+      });
+      return idx;
     });
   };
   const ImageClick = (idx) => {
@@ -124,10 +170,10 @@ function TravelImages({ travelImages, title }) {
         style={{ "--move": "0" }}
         ref={fullImage}
       >
-        {travelImages.map((imgUrl, idx) => (
+        {travelImages.map((imageData, idx) => (
           <li className="min-w-[100vw] h-[100vh]" key={idx}>
             <img
-              src={imgUrl}
+              src={imageData.url}
               alt="sydney"
               className={`w-full h-full object-fill`}
             />
@@ -141,6 +187,7 @@ function TravelImages({ travelImages, title }) {
               text={["P", "r", "e", "v"]}
               imageui={fullImage}
               adjustImages={adjustImages}
+              controlRef={controlBtnPrev}
             />
             <ImageControlBtn
               text={["N", "e", "x", "t"]}
@@ -148,6 +195,7 @@ function TravelImages({ travelImages, title }) {
               right={true}
               imageui={fullImage}
               adjustImages={adjustImages}
+              controlRef={controlBtnNext}
             />
           </div>
         </div>
@@ -169,9 +217,9 @@ function TravelImages({ travelImages, title }) {
           DragActive(e);
         }}
       >
-        {travelImages.map((imgUrl, idx) => (
+        {travelImages.map((imageData, idx) => (
           <li
-            className={`h-[20vw] min-w-[15vw] transition-transform duration-[1s] ease-in-out ${
+            className={`relative h-[20vw] min-w-[15vw] max-w-[15vw] transition-transform duration-[1s] ease-in-out ${
               isMax ? "pointer-events-none" : ""
             }`}
             key={idx}
@@ -180,10 +228,36 @@ function TravelImages({ travelImages, title }) {
               ImageClick(idx);
             }}
           >
-            <img className={`object-cover h-full w-full`} src={imgUrl} alt="" />
+            <img
+              className={`object-cover h-full w-full`}
+              src={imageData.url}
+              alt=""
+            />
           </li>
         ))}
       </ul>
+      <canvas
+        ref={mycanvas}
+        style={{ position: "absolute", visibility: "hidden", zIndex: "-1" }}
+      ></canvas>
+      <div
+        className={`absolute bottom-0 flex w-full justify-center pb-5 ${
+          isMax ? "sm:gap-30 gap-10" : "sm:gap-15 gap-5"
+        }`}
+      >
+        {isClicked === 0 || isClicked
+          ? travelImages[isClicked].tags.map((tag, idx) => (
+              <div key={idx}>
+                <p
+                  style={{ "--delay": `${0}ms` }}
+                  className={`${isMax ? "" : "text-second"}`}
+                >
+                  {tag}
+                </p>
+              </div>
+            ))
+          : null}
+      </div>
     </div>
   );
 }

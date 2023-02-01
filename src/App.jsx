@@ -1,21 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Sydney, Header } from "./container";
+import travelSpot from "./assets";
+import { TravelSpot, Header } from "./container";
 import styles from "./styles";
 function App() {
   const outterDiv = useRef(null);
   const slideLay = useRef(null);
-
   useEffect(() => {
     let disableScroll = false;
     let indexOfSlide = 0;
-    console.log(this);
 
     const mywheel = function (e) {
       if (!disableScroll) {
         disableScroll = true;
         // const childOfApp = outterDiv.current.children;
         const slideLays = slideLay.current.children;
-        console.log(slideLays);
         function changeIndex(idx) {
           indexOfSlide = indexOfSlide + idx;
         }
@@ -48,11 +46,9 @@ function App() {
     >
       <Header />
       <div className={`${styles.topLayout}`} ref={slideLay}>
-        <Sydney />
-        <Sydney />
-        <Sydney />
-
-        <Sydney />
+        <TravelSpot title={"Sydney"} travelImages={travelSpot.sydney} />
+        <TravelSpot title={"Melbourne"} travelImages={travelSpot.melbourne} />
+        <TravelSpot title={"Gold Coast"} travelImages={travelSpot.goldcoast} />
       </div>
     </div>
   );

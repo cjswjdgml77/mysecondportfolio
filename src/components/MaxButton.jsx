@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
 
 function MaxButton({ max, setMax }) {
-  const slideBox = useRef();
+  const slideBox = useRef(null);
   useEffect(() => {
     setTimeout(() => {
+      if (!slideBox.current) return;
       slideBox.current.childNodes.forEach((child) => {
         if (max) {
           child.classList.toggle("slide-button-on");
