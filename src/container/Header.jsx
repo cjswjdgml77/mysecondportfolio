@@ -4,44 +4,46 @@ import { flex } from "../styles";
 import mainbg from "../assets/mainbg.jpg";
 import blackripple from "../assets/blackripple.mp4";
 import DinamicText from "../components/DinamicText";
+import { IKImage, IKContext } from "imagekitio-react";
+
 function Header() {
   const title = useRef(null);
   const bgImages = [
-    "http://localhost:3000/images/bg.jpg",
-    "http://localhost:3000/images/bg1.jpg",
-    "http://localhost:3000/images/bg2.jpg",
-    "http://localhost:3000/images/bg3.jpg",
-    "http://localhost:3000/images/bg4.jpg",
-    "http://localhost:3000/images/bg5.jpg",
-    "http://localhost:3000/images/bg6.jpg",
-    "http://localhost:3000/images/bg7.jpg",
-    "http://localhost:3000/images/bg.jpg",
-    "http://localhost:3000/images/bg1.jpg",
-    "http://localhost:3000/images/bg2.jpg",
-    "http://localhost:3000/images/bg3.jpg",
-    "http://localhost:3000/images/bg4.jpg",
-    "http://localhost:3000/images/bg5.jpg",
-    "http://localhost:3000/images/bg6.jpg",
-    "http://localhost:3000/images/bg7.jpg",
-    "http://localhost:3000/images/bg6.jpg",
-    "http://localhost:3000/images/bg7.jpg",
-    "http://localhost:3000/images/bg6.jpg",
-    "http://localhost:3000/images/bg7.jpg",
-    "http://localhost:3000/images/bg.jpg",
-    "http://localhost:3000/images/bg1.jpg",
-    "http://localhost:3000/images/bg2.jpg",
-    "http://localhost:3000/images/bg3.jpg",
-    "http://localhost:3000/images/bg4.jpg",
-    "http://localhost:3000/images/bg5.jpg",
-    "http://localhost:3000/images/bg6.jpg",
-    "http://localhost:3000/images/bg7.jpg",
-    "http://localhost:3000/images/bg.jpg",
-    "http://localhost:3000/images/bg1.jpg",
-    "http://localhost:3000/images/bg2.jpg",
-    "http://localhost:3000/images/bg3.jpg",
-    "http://localhost:3000/images/bg4.jpg",
-    "http://localhost:3000/images/bg5.jpg",
-    "http://localhost:3000/images/bg6.jpg",
+    "/bg.jpg",
+    "/bg1.jpg",
+    "/bg2.jpg",
+    "/bg3.jpg",
+    "/bg4.jpg",
+    "/bg5.jpg",
+    "/bg6.jpg",
+    "/bg7.jpg",
+    "/bg.jpg",
+    "/bg1.jpg",
+    "/bg2.jpg",
+    "/bg3.jpg",
+    "/bg4.jpg",
+    "/bg5.jpg",
+    "/bg6.jpg",
+    "/bg7.jpg",
+    "/bg6.jpg",
+    "/bg7.jpg",
+    "/bg6.jpg",
+    "/bg7.jpg",
+    "/bg.jpg",
+    "/bg1.jpg",
+    "/bg2.jpg",
+    "/bg3.jpg",
+    "/bg4.jpg",
+    "/bg5.jpg",
+    "/bg6.jpg",
+    "/bg7.jpg",
+    "/bg.jpg",
+    "/bg1.jpg",
+    "/bg2.jpg",
+    "/bg3.jpg",
+    "/bg4.jpg",
+    "/bg5.jpg",
+    "/bg6.jpg",
   ];
   const VideoClick = () => {
     const imageDiv = document.querySelectorAll(".image-div");
@@ -86,33 +88,12 @@ function Header() {
         } else if (idx % 7 === 6) {
           img.style.transform = "translateY(-500%)";
         }
-        // if (idx < middleX) {
-        //   if (idx < middleLeftY || idx > middleRightY) {
-        //     transY = (2 - Math.floor(idx / 7)) * 100;
-        //   }
-        //   img.style.transform = `translateX(${
-        //     Math.floor((middleX - idx) % 10) * 100
-        //   }%) translateY(${transY}%)`;
-        // } else if (idx > middleX) {
-        //   if (idx < middleLeftY || idx > middleRightY) {
-        //     transY = (2 - Math.floor(idx / 7)) * 100;
-        //   }
-        //   img.style.transform = `translateX(${
-        //     Math.floor((idx - middleX) % 10) * -100
-        //   }%) translateY(${transY}%)`;
-        // } else {
-        //   if (idx < middleLeftY || idx > middleRightY) {
-        //     transY = (2 - Math.floor(idx / 7)) * 100;
-        //   }
-        //   img.style.transform = `translateY(${transY}%)`;
-        // }
+
         if (idx === last) {
           last += 7;
           middleX += 7;
         }
-        // idx === 17
-        //   ? (img.style.width = "100%")
-        //   :
+
         img.style.width = `${window.innerWidth / 7}px`;
       });
     };
@@ -136,10 +117,14 @@ function Header() {
             }`}
             key={idx}
           >
-            <img
-              className="object-fill h-[100%] w-[100%] align-top"
-              src={img}
-            />
+            <IKContext
+              publicKey="public_hb+ssSooWMAAm/OUsGKnHyxixAw="
+              urlEndpoint="https://ik.imagekit.io/cjswjdgml"
+              transformationPosition="path"
+              authenticationEndpoint="http://www.yourserver.com/auth"
+            >
+              <IKImage path={`${img}`} className="w-full h-full" />
+            </IKContext>
           </div>
         ))}
       </div>

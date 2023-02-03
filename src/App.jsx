@@ -6,6 +6,12 @@ function App() {
   const outterDiv = useRef(null);
   const slideLay = useRef(null);
   useEffect(() => {
+    window.addEventListener("load", () => {
+      console.log("load");
+    });
+    document.onreadystatechange = (e) => {
+      console.log(e);
+    };
     let disableScroll = false;
     let indexOfSlide = 0;
 

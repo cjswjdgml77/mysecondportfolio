@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "../styles";
 import MaxButton from "./MaxButton";
 import ImageControlBtn from "./ImageControlBtn";
+import { IKImage, IKContext } from "imagekitio-react";
+
 function TravelImages({ travelImages, title }) {
   const imageBox = useRef(null);
   const fullImage = useRef(null);
@@ -19,14 +21,13 @@ function TravelImages({ travelImages, title }) {
       const listsOfImeages = imageBox.current.childNodes;
       const image = new Image(window.innerWidth, window.innerHeight);
       image.onload = drawCanvas;
-      image.src = travelImages[isClicked ? isClicked : 0].url;
-
+      image.src = travelImages[isClicked ? isClicked : 0].localurl;
       function drawCanvas() {
         ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         mycanvas.current.width = window.innerWidth;
         mycanvas.current.height = window.innerHeight;
 
-        ctx.drawImage(this, 0, 0, this.width, this.height);
+        ctx.drawImage(this, 0, 0, window.innerWidth, window.innerHeight);
 
         const firstBtn = controlBtnPrev.current.getBoundingClientRect();
         const secondBtn = controlBtnNext.current.getBoundingClientRect();
@@ -56,7 +57,6 @@ function TravelImages({ travelImages, title }) {
           })`
         );
       }
-      console.log(window.innerWidth * 15 * 20) / (100 * listsOfImeages.length);
       isClicked ? adjustImages(isClicked) : adjustImages(0);
       fullImage.current.style.setProperty("--move", `-${isClicked * 100}%`);
       const imageGap = (window.innerWidth * 5 * listsOfImeages.length) / 100;
@@ -89,7 +89,6 @@ function TravelImages({ travelImages, title }) {
     if (isClicked || isClicked === 0) {
       setIsClicked(null);
     }
-    console.log(start + e.movementX * speed);
     listsOfImeages.forEach((image, idx) => {
       if (start + e.movementX * speed > 0) {
         image.style.transform = `translateX(0px)`;
@@ -118,7 +117,6 @@ function TravelImages({ travelImages, title }) {
         if (index === idx) {
           img.style.transform = `translateX(${start}px) scale(1.5)`;
         } else {
-          console.log(idx);
           if (start === 0 || start) {
             let add = (window.innerWidth * 5) / 100;
             if (index < idx) {
@@ -143,7 +141,6 @@ function TravelImages({ travelImages, title }) {
         if (index === idx) {
           img.style.transform = `translateX(${start}px) scale(1.5)`;
         } else {
-          console.log(idx);
           if (start === 0 || start) {
             let add = (window.innerWidth * 5) / 100;
             if (index < idx) {
@@ -172,11 +169,17 @@ function TravelImages({ travelImages, title }) {
       >
         {travelImages.map((imageData, idx) => (
           <li className="min-w-[100vw] h-[100vh]" key={idx}>
-            <img
-              src={imageData.url}
-              alt="sydney"
-              className={`w-full h-full object-fill`}
-            />
+            <IKContext
+              publicKey="public_hb+ssSooWMAAm/OUsGKnHyxixAw="
+              urlEndpoint="https://ik.imagekit.io/cjswjdgml"
+              transformationPosition="path"
+              authenticationEndpoint="http://www.yourserver.com/auth"
+            >
+              <IKImage
+                path={`${imageData.url}`}
+                className="w-full h-full"
+              ></IKImage>
+            </IKContext>
           </li>
         ))}
       </ul>
@@ -228,11 +231,19 @@ function TravelImages({ travelImages, title }) {
               ImageClick(idx);
             }}
           >
-            <img
-              className={`object-cover h-full w-full`}
-              src={imageData.url}
-              alt=""
-            />
+            {/* <LazyLoad
+              height={(window.innerWidth * 20) / 100}
+              width={(window.innerWidth * 15) / 100}
+              unmountIfInvisible={true}
+            > */}
+            <IKContext
+              publicKey="public_hb+ssSooWMAAm/OUsGKnHyxixAw="
+              urlEndpoint="https://ik.imagekit.io/cjswjdgml"
+              transformationPosition="path"
+              authenticationEndpoint="http://www.yourserver.com/auth"
+            >
+              <IKImage path={`${imageData.url}`} className="min-h-[100%]" />
+            </IKContext>
           </li>
         ))}
       </ul>
@@ -241,16 +252,19 @@ function TravelImages({ travelImages, title }) {
         style={{ position: "absolute", visibility: "hidden", zIndex: "-1" }}
       ></canvas>
       <div
-        className={`absolute bottom-0 flex w-full justify-center pb-5 ${
-          isMax ? "sm:gap-30 gap-10" : "sm:gap-15 gap-5"
-        }`}
+        className={`absolute overflow-hidden bottom-[6vh] flex w-full justify-center transition-transform duration-300 ease-in
+         ${
+           isMax ? "sm:gap-30 gap-10 translate-y-[-350%]" : "sm:gap-15 gap-5 "
+         }`}
       >
         {isClicked === 0 || isClicked
           ? travelImages[isClicked].tags.map((tag, idx) => (
               <div key={idx}>
                 <p
-                  style={{ "--delay": `${0}ms` }}
-                  className={`${isMax ? "" : "text-second"}`}
+                  style={{ "--delay": `${400 + idx * 100}ms` }}
+                  className={`text-second  ${
+                    isMax ? "text-2xl sm:text-3xl" : "text-lg sm:text-xl"
+                  } tag-up`}
                 >
                   {tag}
                 </p>
